@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -14,6 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import de.tntstudios.CityManager.Events.PlayerJoin;
 import de.tntstudios.CityManager.Events.PlayerQuit;
+import de.tntstudios.Logging.LogConfiguration;
 
 public class CityManager extends JavaPlugin {
 
@@ -24,8 +27,13 @@ public class CityManager extends JavaPlugin {
 	
 	public static HashMap<String,CityPlayer> cityPlayers = new HashMap<String,CityPlayer>();
 	
+	static Logger logger = Logger.getLogger(CityManager.class.getName());
+	
 	@Override
 	public void onEnable() {
+		
+		//Initialisierung Logging
+		LogConfiguration.init(logger);
 		//Events werden einzeln aufgerufen, beim Start des Plugins
 		Bukkit.getPluginManager().registerEvents(new PlayerJoin(this), this);
 		Bukkit.getPluginManager().registerEvents(new PlayerQuit(this), this);
@@ -73,7 +81,7 @@ public class CityManager extends JavaPlugin {
 			DbConnector.closeConnection();
 			
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			logger.log(Level.SEVERE, e.getMessage());
 		}
 			
 		return check;
@@ -111,8 +119,7 @@ public class CityManager extends JavaPlugin {
 			DbConnector.closeConnection();
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println(e.getMessage());
+			logger.log(Level.SEVERE, e.getMessage());
 		}
 	}
 	
@@ -143,8 +150,7 @@ public class CityManager extends JavaPlugin {
 				DbConnector.closeConnection();
 				
 			} catch (SQLException e) {
-				
-				e.printStackTrace();
+				logger.log(Level.SEVERE, e.getMessage());
 			} 
 		}
 	}
